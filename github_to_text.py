@@ -4,15 +4,13 @@ from github import Github
 from google.cloud import storage
 from google.cloud import secretmanager
 
-# import environmental variable "PROJECT_ID"
-PROJECT_ID = os.getenv("PROJECT_ID")
-
-
-# get token from GCP secret manager
-client = secretmanager.SecretManagerServiceClient()
-secret_name = f"projects/{PROJECT_ID}/secrets/github_pat/versions/latest"
-response = client.access_secret_version(request={"name": secret_name})
-githun_pat = response.payload.data.decode("UTF-8")
+def get_github_pat (project_id):
+    # get token from GCP secret manager
+    client = secretmanager.SecretManagerServiceClient()
+    secret_name = f"projects/{project_id}/secrets/github_pat/versions/latest"
+    response = client.access_secret_version(request={"name": secret_name})
+    github_pat = response.payload.data.decode("UTF-8")
+    return github_pat
 
 
 def recursive_fetch_files(repo, contents):
@@ -49,7 +47,7 @@ def recursive_fetch_files(repo, contents):
     return files_data
 
 
-def fetch_all_files(repo_url, repo_sub_path=""):
+def fetch_all_files(project_id, repo_url, repo_sub_path=""):
     """Fetch all files from the GitHub repository."""
 
     # Extract repository owner and name from the URL
@@ -58,7 +56,8 @@ def fetch_all_files(repo_url, repo_sub_path=""):
     repo_name = repo_parts[-1]
 
     # Authenticate with GitHub API (replace with your personal access token)
-    g = Github(githun_pat)
+    github_pat = get_github_pat(project_id)
+    g = Github(github_pat)
     repo = g.get_repo(f"{owner}/{repo_name}")
     contents = repo.get_contents(repo_sub_path)
 
@@ -67,10 +66,10 @@ def fetch_all_files(repo_url, repo_sub_path=""):
     return files_data
 
 
-def repo_to_bucket(repo_url, bucket_name, repo_sub_path=""):
+def repo_to_bucket(project_id, repo_url, bucket_name, repo_sub_path=""):
     repo_name = repo_url.split("/")[-1]
 
-    files_data = fetch_all_files(repo_url, repo_sub_path)
+    files_data = fetch_all_files(project_id, repo_url, repo_sub_path)
 
     full_code_string = " ".join(files_data)
 

@@ -5,11 +5,8 @@ from vertexai.generative_models import GenerativeModel, Part, FinishReason
 import vertexai.preview.generative_models as generative_models
 from io import StringIO
 
-BUCKET_NAME = os.getenv("BUCKET_NAME")
-PROJECT_ID = os.getenv("PROJECT_ID")
 
-
-def generate(path_to_code, path_to_design_document=None):
+def generate(project_id, bucket_name, path_to_code, path_to_design_document=None):
 
     code_base = Part.from_uri(mime_type="text/plain", uri=path_to_code)
 
@@ -27,34 +24,34 @@ def generate(path_to_code, path_to_design_document=None):
 
     overview = Part.from_uri(
         mime_type="application/pdf",
-        uri=f"gs://{BUCKET_NAME}/Google_Cloud_Architecture_Framework_Overview.pdf",
+        uri=f"gs://{bucket_name}/Google_Cloud_Architecture_Framework_Overview.pdf",
     )
     opex = Part.from_uri(
         mime_type="application/pdf",
-        uri=f"gs://{BUCKET_NAME}/Google_Cloud_Architecture_Framework_OpEx.pdf",
+        uri=f"gs://{bucket_name}/Google_Cloud_Architecture_Framework_OpEx.pdf",
     )
     security = Part.from_uri(
         mime_type="application/pdf",
-        uri=f"gs://{BUCKET_NAME}/Google_Cloud_Architecture_Framework_Security.pdf",
+        uri=f"gs://{bucket_name}/Google_Cloud_Architecture_Framework_Security.pdf",
     )
     reliability = Part.from_uri(
         mime_type="application/pdf",
-        uri=f"gs://{BUCKET_NAME}/Google_Cloud_Architecture_Framework_Reliability.pdf",
+        uri=f"gs://{bucket_name}/Google_Cloud_Architecture_Framework_Reliability.pdf",
     )
     cost = Part.from_uri(
         mime_type="application/pdf",
-        uri=f"gs://{BUCKET_NAME}/Google_Cloud_Architecture_Framework_Cost.pdf",
+        uri=f"gs://{bucket_name}/Google_Cloud_Architecture_Framework_Cost.pdf",
     )
     performance = Part.from_uri(
         mime_type="application/pdf",
-        uri=f"gs://{BUCKET_NAME}/Google_Cloud_Architecture_Framework_Performance.pdf",
+        uri=f"gs://{bucket_name}/Google_Cloud_Architecture_Framework_Performance.pdf",
     )
 
     system_instruction = "You are an expert in Google Cloud Architectures. \
          Your goal is to compare the deployment code to the  Google Cloud Architecture Framework and recommend improvements to the code and desing documents. \
          Structure your answer in the five sections of the framework: Operational Excellence, Security, Reliability, Cost Optimisation, and Performance Optimisation."
 
-    vertexai.init(project=PROJECT_ID, location="us-central1")
+    vertexai.init(project=project_id, location="europe-west1")
     model = GenerativeModel(
         "gemini-1.5-flash-001", system_instruction=[system_instruction]
     )
