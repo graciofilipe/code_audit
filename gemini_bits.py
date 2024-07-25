@@ -4,6 +4,8 @@ import vertexai
 from vertexai.generative_models import GenerativeModel, Part, FinishReason
 import vertexai.preview.generative_models as generative_models
 from io import StringIO
+from google.cloud import storage
+
 
 
 def generate(project_id, bucket_name, path_to_code, path_to_design_document=None):
@@ -68,11 +70,17 @@ def generate(project_id, bucket_name, path_to_code, path_to_design_document=None
             "Reliability: ", reliability,
             "Cost Optimisation: ", cost,
             "Performance Optimisation: ", performance,
-            "\n Evaluate the design document and diagrams as well as the code, and recommend improvements based on the recommendations of the Google Cloud Architecture Framework.",
+            "\n Evaluate the code, and recommend improvements based on the recommendations of the Google Cloud Architecture Framework.",
         ],
         generation_config=generation_config,
         stream=True,
     )
 
+    output_string = ""
     for response in responses:
-        print(response.text, end="")
+        output_string += response.text
+    
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(bucket_name)
+    blob = bucket.blob(f"{os.path.basename(path_to_code).split('.')[0]}_analysis.txt")
+    blob.upload_from_string(output_string)
