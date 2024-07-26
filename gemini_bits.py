@@ -60,7 +60,7 @@ def generate(project_id, bucket_name, path_to_code, model_name):
             "Reliability: ", reliability,
             "Cost Optimisation: ", cost,
             "Performance Optimisation: ", performance,
-            "\n Evaluate the code, and recommend improvements in the code base, based on the recommendations of the Google Cloud Architecture Framework.",
+            "\n Evaluate the code, and recommend improvements in the code base, based on the recommendations of the Google Cloud Architecture Framework.If there points where the code does already adhere to the recommendations of the framework, breifly highlight those",
         ],
         generation_config=generation_config,
         stream=True,
