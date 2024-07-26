@@ -8,7 +8,7 @@ from google.cloud import storage
 
 
 
-def generate(project_id, bucket_name, path_to_code, path_to_design_document=None):
+def generate(project_id, bucket_name, path_to_code, model_name,path_to_design_document=None):
 
     code_base = Part.from_uri(mime_type="text/plain", uri=path_to_code)
 
@@ -55,7 +55,7 @@ def generate(project_id, bucket_name, path_to_code, path_to_design_document=None
 
     vertexai.init(project=project_id, location="europe-west1")
     model = GenerativeModel(
-        "gemini-1.5-flash-001", system_instruction=[system_instruction]
+        model_name, system_instruction=[system_instruction]
     )
 
     generation_config = {"max_output_tokens": 8192, "top_p": 0.5, "temperature": 0.11}
