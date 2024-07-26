@@ -20,7 +20,5 @@ steps:
       - --memory=12Gi
       - --timeout=999s
       - --concurrency=1
-      - --max-instance-count=1
-      - --min-instance-count=0
-      - --location=europe-west1
-
+      - --max-instances=1
+      - --min-instances=0
