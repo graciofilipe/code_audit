@@ -17,7 +17,8 @@ steps:
       - --image=europe-docker.pkg.dev/$PROJECT_ID/code-vs-archframework/code-vs-archframework-image:latest
       - --region=europe-west1
       - --platform=managed
-      - --memory=12Gi
+      - --cpu=2
+      - --memory=2Gi
       - --timeout=999s
       - --concurrency=1
       - --max-instances=1
