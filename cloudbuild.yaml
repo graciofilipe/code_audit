@@ -12,14 +12,10 @@ steps:
   - name: 'gcr.io/cloud-builders/gcloud'
     args:
       - run
+      - job
       - deploy
       - code-vs-archframework-job
       - --image=europe-docker.pkg.dev/$PROJECT_ID/code-vs-archframework/code-vs-archframework-image:latest
       - --region=europe-west1
-      - --platform=managed
       - --cpu=2
       - --memory=2Gi
-      - --timeout=999s
-      - --concurrency=1
-      - --max-instances=1
-      - --min-instances=0
