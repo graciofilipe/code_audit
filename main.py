@@ -24,9 +24,7 @@ def repo_to_analysis(
         project_id=project_id,
         bucket_name=bucket_name,
         path_to_code=f"gs://{bucket_name}/" + repo_url.split("/")[-1] + repo_sub_path.replace("/", "_") + ".txt",
-        model_name=model_name,
-        path_to_design_document=None,
-    )
+        model_name=model_name)
 
 
 if __name__ == "__main__":
