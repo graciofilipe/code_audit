@@ -8,21 +8,10 @@ from google.cloud import storage
 
 
 
-def generate(project_id, bucket_name, path_to_code, model_name,path_to_design_document=None):
+def generate(project_id, bucket_name, path_to_code, model_name):
 
     code_base = Part.from_uri(mime_type="text/plain", uri=path_to_code)
 
-    if path_to_design_document:
-        design_document = Part.from_uri(
-            mime_type="application/pdf", uri=path_to_design_document
-        )
-        design_string = [
-            "Here is the design document and diagrams for Apache Guacamole on GCP: ",
-            design_document,
-            "End of design document. \n",
-        ]
-    else:
-        design_string = "   "
 
     overview = Part.from_uri(
         mime_type="application/pdf",
@@ -51,7 +40,8 @@ def generate(project_id, bucket_name, path_to_code, model_name,path_to_design_do
 
     system_instruction = "You are an expert in Google Cloud Architectures. \
          Your goal is to compare the deployment code to the  Google Cloud Architecture Framework and recommend improvements to the code and desing documents. \
-         Structure your answer in the five sections of the framework: Operational Excellence, Security, Reliability, Cost Optimisation, and Performance Optimisation."
+         Structure your answer in the five sections of the framework: Operational Excellence, Security, Reliability, Cost Optimisation, and Performance Optimisation. \
+         Your answe should focus on specific code improvements"
 
     vertexai.init(project=project_id, location="europe-west1")
     model = GenerativeModel(
@@ -70,7 +60,7 @@ def generate(project_id, bucket_name, path_to_code, model_name,path_to_design_do
             "Reliability: ", reliability,
             "Cost Optimisation: ", cost,
             "Performance Optimisation: ", performance,
-            "\n Evaluate the code, and recommend improvements based on the recommendations of the Google Cloud Architecture Framework.",
+            "\n Evaluate the code, and recommend improvements in the code base, based on the recommendations of the Google Cloud Architecture Framework.",
         ],
         generation_config=generation_config,
         stream=True,
